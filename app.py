@@ -10,6 +10,10 @@ session_messages = {}
 # 環境変数からAPIキーを読み込む
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 
+# APIキーが設定されていない場合はエラーメッセージを表示
+if openai.api_key is None:
+    raise EnvironmentError("環境変数 'OPENAI_API_KEY' が設定されていません。")
+
 @app.route('/')
 def index():
     # ユニークなセッションIDを作る
