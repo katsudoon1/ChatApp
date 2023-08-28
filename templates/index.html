@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with GPT-3</title>
+</head>
+<body>
+
+    <h1>Chat with GPT-3</h1>
+
+    <div>
+        <input type="text" id="user_input" placeholder="Type your message here...">
+        <button id="send_button">Send</button>
+    </div>
+
+    <div id="chat_box">
+        <!-- Chat messages will appear here -->
+    </div>
+
+    <script>
+        // DOM elements
+        const sendButton = document.getElementById("send_button");
+        const userInput = document.getElementById("user_input");
+        const chatBox = document.getElementById("chat_box");
+        
+        // Event listener for the send button
+        sendButton.addEventListener("click", function() {
+            const userText = userInput.value;
+            
+            // Display user input in the chat box
+            const userMessage = document.createElement("p");
+            userMessage.textContent = "You: " + userText;
+            chatBox.appendChild(userMessage);
+
+            // Create XMLHttpRequest object
+            const xhr = new XMLHttpRequest();
+            
+            // Initialize a new request
+            xhr.open("POST", "/chat", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            
+            // Send the request
+            xhr.send(JSON.stringify({ "user_input": userText }));
+            
+            // Event listener for the response
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    const chatOutput = response.chat_output;
+                    
+                    // Display chat output in the chat box
+                    const chatMessage = document.createElement("p");
+                    chatMessage.textContent = "GPT-3: " + chatOutput;
+                    chatBox.appendChild(chatMessage);
+                }
+            };
+            
+            // Clear the input field
+            userInput.value = "";
+        });
+    </script>
+
+</body>
+</html>
